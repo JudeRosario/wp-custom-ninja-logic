@@ -1,7 +1,7 @@
 <?php
 
 /**
-Plugin Name: WP Ninja Fomrs Menu Customizer
+Plugin Name: WP Ninja Forms Menu Customizer
 Plugin URI: https://codeable.io
 Description: Allows for admins to control what gets ordered and on which dates
 Version: 1.0.0
