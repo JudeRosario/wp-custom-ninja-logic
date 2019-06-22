@@ -1,0 +1,57 @@
+# Copyright (C) 2019 WP_Custom_Ninja_Logic
+# This file is distributed under the same license as the WP_Custom_Ninja_Logic package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP_Custom_Ninja_Logic\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: Codeable <your_email@email.com>\n"
+"Last-Translator: Jude Rosario <your_email@email.com>\n"
+"Report-Msgid-Bugs-To: https://example.com/contact/\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: includes/class-wp-custom-ninja-logic.php:348
+msgid "No user records found"
+msgstr ""
+
+#: includes/class-wp-custom-ninja-logic.php:349
+msgid "No users found matching the selected criteria"
+msgstr ""
+
+#: includes/class-wp-custom-ninja-logic.php:350
+msgid "Processing, please wait"
+msgstr ""
+
+#: includes/class-wp-custom-ninja-logic.php:351
+msgid "No users found"
+msgstr ""
+
+#: includes/class-wp-custom-ninja-logic.php:384
+msgid "You are not allowed to access this content"
+msgstr ""
+
+#: templates/table-template.php:14
+msgid "Filter using role"
+msgstr ""
+
+#: templates/table-template.php:16
+msgid "All Roles"
+msgstr ""
+
+#: templates/table-template.php:32
+msgid "Username"
+msgstr ""
+
+#: templates/table-template.php:33
+msgid "Display Name"
+msgstr ""
+
+#: templates/table-template.php:34
+msgid "User Role"
+msgstr ""

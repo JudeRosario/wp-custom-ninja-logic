@@ -1,0 +1,33 @@
+{
+  "scripts": {
+
+	"install-codesniffs": [
+
+	  "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
+
+	],
+
+	"post-install-cmd": [
+
+	  "@install-codesniff"
+
+	]
+  },
+  "name": "codeable/wp-custom-ninja-logic",
+  "type": "project",
+  "require-dev": {
+
+	"squizlabs/php_codesniffer": "3.3.*",
+
+	"wimg/php-compatibility": "9.0.*",
+
+	"wp-coding-standards/wpcs": "1.1.*",
+
+	"dealerdirect/phpcodesniffer-composer-installer": "0.4.*"
+  },
+  "require": {
+
+	"datatables/datatables": "dev-master",
+  },
+  "prefer-stable" : true
+}
