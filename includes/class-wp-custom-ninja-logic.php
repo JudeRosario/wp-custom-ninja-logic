@@ -224,7 +224,7 @@ if ( ! class_exists( 'WP_Custom_Ninja_Logic' ) ) :
 
 			add_settings_field(
 				'form_id', // id
-				'From ID', // title
+				'From IDs', // title
 				array( $this, 'form_id_callback' ), // callback
 				'menu-customiser-admin', // page
 				'wpcnl_setting_section' // section
@@ -344,11 +344,12 @@ if ( ! class_exists( 'WP_Custom_Ninja_Logic' ) ) :
 		}
 
 		public function form_id_callback() {
-			printf('<p><small>Form ID to Observe</small></p>');
+			printf('<p><small>Form IDs to Observe</small></p>');
 			printf(
 				'<input class="regular-text" type="text" name="wpcnl_settings[form_id]" id="form_id" value="%s">',
 				isset( $this->wpcnl_options['form_id'] ) ? esc_attr( $this->wpcnl_options['form_id']) : ''
 			);
+			printf('<p><small>Input Field IDs, separated by a comma</small></p>');
 		}
 
 		public function start_date_callback() {
