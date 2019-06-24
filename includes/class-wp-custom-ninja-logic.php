@@ -121,16 +121,17 @@ if ( ! class_exists( 'WP_Custom_Ninja_Logic' ) ) :
 			$this->wpcnl_options = get_option( 'wpcnl_settings' );
 			$start_date = isset( $this->wpcnl_options['start_date'] ) ? $this->wpcnl_options['start_date'] : $start_date;
 			$end_date = isset( $this->wpcnl_options['end_date'] ) ? $this->wpcnl_options['end_date'] : $end_date;
+			$cutoff_time = isset( $this->wpcnl_options['cutoff_time'] ) ? 'today '.$this->wpcnl_options['cutoff_time'] : 'today 6:00PM';
 
-			$six_pm = strtotime('today 6:00PM') + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
-
+			$cutoff_time = strtotime($cutoff_time);
 			$starting_soon = (
 				date('Y-m-d', strtotime($start_date)) == date('Y-m-d') || 
 				date('Y-m-d', strtotime($start_date)) == date('Y-m-d', strtotime('tomorrow'))
 				) ? true : false;
 
+
 			if (strtotime($start_date) < current_time('timestamp') || $starting_soon) {
-				$start_date = current_time('timestamp') <  $six_pm ? '+1 day' : '+2 days';
+				$start_date = current_time('timestamp') <  $cutoff_time ? '+1 day' : '+2 days';
 			}
 
 			$current = strtotime($start_date);
@@ -247,6 +248,14 @@ if ( ! class_exists( 'WP_Custom_Ninja_Logic' ) ) :
 			);
 
 			add_settings_field(
+				'cutoff_time', // id
+				'Cut off time', // title
+				array( $this, 'cutoff_time_callback' ), // callback
+				'menu-customiser-admin', // page
+				'wpcnl_setting_section' // section
+			);
+
+			add_settings_field(
 				'menu_items_observed', // id
 				'Menu Items Rules', // title
 				array( $this, 'menu_items_observed_callback' ), // callback
@@ -272,6 +281,10 @@ if ( ! class_exists( 'WP_Custom_Ninja_Logic' ) ) :
 				$sanitized_values['end_date'] = sanitize_text_field( $input['end_date'] );
 			}
 
+			if ( isset( $input['cutoff_time'] ) ) {
+				$sanitized_values['cutoff_time'] = sanitize_text_field( $input['cutoff_time'] );
+			}
+
 			if ( isset( $input['menu_items_observed'] ) ) {
 
 				$rows = preg_split( '/\r\n|\r|\n/',  esc_textarea( $input['menu_items_observed'] ));
@@ -290,7 +303,7 @@ if ( ! class_exists( 'WP_Custom_Ninja_Logic' ) ) :
 					}
 
 
-					$mapping[$values[0]]['error_message'] = empty($values[2]) ? "One of these fields are required" : filter_var($values[2], FILTER_SANITIZE_STRING);
+					$mapping[$values[0]]['error_message'] = empty($values[2]) ? "-" : filter_var($values[2], FILTER_SANITIZE_STRING);
 
 					if (!isset($mapping[$values[0]]['conditionally_require'])) {
 						unset($mapping[$values[0]]);
@@ -344,28 +357,27 @@ if ( ! class_exists( 'WP_Custom_Ninja_Logic' ) ) :
 		}
 
 		public function form_id_callback() {
-			printf('<p><small>Form IDs to Observe</small></p>');
 			printf(
 				'<input class="regular-text" type="text" name="wpcnl_settings[form_id]" id="form_id" value="%s">',
 				isset( $this->wpcnl_options['form_id'] ) ? esc_attr( $this->wpcnl_options['form_id']) : ''
 			);
-			printf('<p><small>Input Field IDs, separated by a comma</small></p>');
+			printf('<p><small>Form IDs to Observe</small></p>');
 		}
 
 		public function start_date_callback() {
-			printf('<p><small>Event Start Date</small></p>');
 			printf(
 				'<input class="regular-text" readonly="readonly" type="text" name="wpcnl_settings[start_date]" id="start_date" value="%s">',
 				isset( $this->wpcnl_options['start_date'] ) ? esc_attr( $this->wpcnl_options['start_date']) : ''
 			);
+			printf('<p><small>Event Start Date</small></p>');
 		}
 
 		public function end_date_callback() {
-			printf('<p><small>Event End Date</small></p>');
 			printf(
 				'<input class="regular-text" type="text" readonly="readonly" name="wpcnl_settings[end_date]" id="end_date" value="%s">',
 				isset( $this->wpcnl_options['end_date'] ) ? esc_attr( $this->wpcnl_options['end_date']) : ''
 			);
+			printf('<p><small>Event End Date</small></p>');
 		}
 
 		public function menu_items_observed_callback() {
@@ -377,12 +389,29 @@ if ( ! class_exists( 'WP_Custom_Ninja_Logic' ) ) :
 			printf('<p><small>Eg - 12|13,14|Either rice or nan is needed with this dish</small></p>');
 		}
 
-		public function menu_items_required_callback() {
-			printf('<p><small>Input Field IDs, separated by a comma</small></p>');
+		public function cutoff_time_callback() {
+
+			$output = '';
+			$interval = '+60 minutes';
+		    $current = strtotime( '00:00' );
+		    $end = strtotime( '23:59' );
+
+		    while( $current <= $end ) {
+		        $time = date( 'H:i', $current );
+		        $sel = ( $time == $this->wpcnl_options['cutoff_time'] ) ? ' selected' : '';
+
+		        $output .= "<option value=\"{$time}\"{$sel}>" . date( 'h.i A', $current ) .'</option>';
+		        $current = strtotime( $interval, $current );
+		    }
+
 			printf(
-				'<input class="regular-text" type="text" name="wpcnl_settings[menu_items_required]" id="menu_items_required" value="%s">',
-				isset( $this->wpcnl_options['menu_items_required'] ) ? esc_attr( $this->wpcnl_options['menu_items_required']) : ''
+				'<select class="regular-text" type="text" name="wpcnl_settings[cutoff_time]" id="cutoff_time" value="%s">'
+				. $output .
+
+				'</select>',
+				isset( $this->wpcnl_options['cutoff_time'] ) ? esc_attr( $this->wpcnl_options['cutoff_time']) : ''
 			);
+			printf('<p><small>Specify cut off time for the day</small></p>');
 		}
 
 		/**
