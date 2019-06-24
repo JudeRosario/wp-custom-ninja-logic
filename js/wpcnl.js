@@ -76,7 +76,7 @@ jQuery(document).on( 'nfFormReady', function( e, layoutView ) {
             req.forEach(function(i) {
                 req_fields.push(i);
             });
-            err_fields[values[0]] = values[2];
+            err_fields[values[0]] = values[2] == "-" ? "" : values[2];
         });
 
         var submit = '#' + jQuery('#nf-form-' + wpcnl.wpcnl_form + '-cont').find('input[type="button"]').attr('id');
