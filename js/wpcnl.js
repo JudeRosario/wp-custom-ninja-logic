@@ -94,8 +94,34 @@ jQuery(document).on( 'nfFormReady', function( e, layoutView ) {
             });
         });
 
+        jQuery('#nf-form-' + wpcnl.wpcnl_form + '-cont').on('change', function(){
+
+            var set = [];
+
+            obs_fields.forEach(function(id, index) {
+                if (0 < $('#nf-field-' + index).prop('checked')) {
+                    var disable = true
+                    obs_fields[index].forEach(function(i) {
+                        if (0 < $('#nf-field-' + i).val()) {
+                            disable = false;
+                        }
+                    });
+                    set.push(disable);
+                }
+            });
+
+            if (set.includes(true)) {
+                $(submit).prop('disabled', true);
+                $(submit).css('cursor', 'not-allowed');
+                $(submit_error).html('<span class="nf-error-msg">' + nfi18n.formErrorsCorrectErrors + '</span>');
+            } else {
+                $(submit).prop('disabled', false);
+                $(submit).css('cursor', 'pointer');
+                $(submit_error).html(" ");
+            }
+        });
+
         function validate_observed(id) {
-            console.log(id);
             if ('undefined' == typeof id) return;
 
             if($('#nf-field-' + id). prop("checked") == true) {
@@ -108,35 +134,33 @@ jQuery(document).on( 'nfFormReady', function( e, layoutView ) {
                 });
 
                 if (flag) {
-                    console.log("Required Item in cart, removing required from siblings")
                     obs_fields[id].forEach(function(i) {
                         $('#nf-field-' + i).attr("required", "false");
-                        $('#nf-error-' + i).html(" ");
-                        $(submit).prop('disabled', false);
-                        $(submit).css('cursor', 'pointer');
-                        $(submit_error).html(" ");
                     });
 
+                    if (err_fields[id]) {
+                        $('#nf-error-' + id).html(" ");
+                    }
+
                 } else {
-                    console.log("Required Item not in cart, setting required")
                     obs_fields[id].forEach(function(i) {
                         $('#nf-field-' + i).attr("required", "true");
-                        $('#nf-error-' + i).html('<span class="nf-error-msg">' + err_fields[id] + '</span>');
-                        $(submit).prop('disabled', true);
-                        $(submit).css('cursor', 'not-allowed');
-                        $(submit_error).html('<span class="nf-error-msg">' + nfi18n.formErrorsCorrectErrors + '</span>');
                     });
+
+
+                    if (err_fields[id]) {
+                        $('#nf-error-' + id).html('<span class="nf-error-msg">' + err_fields[id] + '</span>');
+                    }
                 }
 
            } else {
-                console.log("Obeserved Item deselected, removing required")
                 obs_fields[id].forEach(function(i) {
                     $('#nf-field-' + i).attr("required", "false");
-                    $('#nf-error-' + i).html(" ");
-                    $(submit).prop('disabled', false);
-                    $(submit).css('cursor', 'pointer');
-                    $(submit_error).html(" ");
                 });
+
+                if (err_fields[id]) {
+                    $('#nf-error-' + id).html(" ");
+                }
            }
         }
 
